@@ -1,15 +1,15 @@
 
 export interface ChartData {
   name: string;
-  value: number; // For Pie/Bar charts (quantity or percentage)
+  value: number; // For Pie/Bar charts 
   color?: string;
   // Enhanced fields for Product List
   progress?: number; // 0-100
-  statusLabel?: string; // e.g. "生产中"
-  isLagging?: boolean; // Highlight for delayed items
+  statusLabel?: string; 
+  isLagging?: boolean; 
   // Enhanced fields for Status Pie
   count?: number;
-  avgTime?: string; // e.g. "3.5h"
+  avgTime?: string; 
   projectList?: string[]; // List of projects in this status
   // Enhanced fields for Workload
   roleBreakdown?: { role: string; time: number; unit: string }[];
