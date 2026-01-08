@@ -8,9 +8,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { fetchWorkloadData, fetchWorkloadDetails } from '../services/api';
 
 /**
- * ======================================================================
  * 1. Product Bar Chart
- * ======================================================================
  */
 
 interface ProductBarChartProps {
@@ -74,9 +72,7 @@ export const ProductBarChart: React.FC<ProductBarChartProps> = ({ data }) => {
 };
 
 /**
- * ======================================================================
  * 2. Status Pie Chart
- * ======================================================================
  */
 const StatusTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -176,9 +172,7 @@ export const StatusPieChart: React.FC<StatusPieChartProps> = ({ data }) => {
 };
 
 /**
- * ======================================================================
- * 3. Workload Dashboard (Interactive)
- * ======================================================================
+ * 3. Workload Dashboard 
  */
 
 const WorkloadDetailsModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
