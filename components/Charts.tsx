@@ -12,6 +12,7 @@ import { fetchWorkloadData, fetchWorkloadDetails } from '../services/api';
  * 1. Product Bar Chart
  * ======================================================================
  */
+
 interface ProductBarChartProps {
   data: ChartData[];
 }
@@ -25,7 +26,8 @@ export const ProductBarChart: React.FC<ProductBarChartProps> = ({ data }) => {
 
   return (
     <div className="w-full h-full overflow-y-auto pr-1 custom-scrollbar">
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-3">
+      {/* Used flex-col to force single column layout (horizontal strips) as requested */}
+      <div className="flex flex-col gap-3">
         {sortedData.map((item, index) => (
           <div 
             key={index}

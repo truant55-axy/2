@@ -14,10 +14,10 @@
               sans: ['Inter', 'Noto Sans SC', 'sans-serif'],
             },
             colors: {
-              'medical-primary': '#0ea5e9',
-              'medical-dark': '#0f172a',    
-              'medical-light': '#f8fafc',   
-              'medical-accent': '#3b82f6',  
+              'medical-primary': '#0ea5e9', // Sky 500
+              'medical-dark': '#0f172a',    // Slate 900
+              'medical-light': '#f8fafc',   // Slate 50
+              'medical-accent': '#3b82f6', 
             },
             boxShadow: {
               'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
@@ -32,10 +32,9 @@
     </script>
     <style>
       body {
-        background-color: #f1f5f9; 
+        background-color: #f1f5f9; /* Slate 100 */
         color: #334155; 
       }
-      /* Custom scrollbar for clean light look */
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
@@ -52,13 +51,15 @@
       }
     </style>
     
+
     <script type="text/javascript">
       window._AMapSecurityConfig = {
-        securityJsCode: 'TRUE_SECURITY_CODE',
+        securityJsCode: 'YOUR_SECURITY_CODE',
       }
     </script>
     
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=TRUE_AMAP_KEY"></script>
+
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=YOUR_AMAP_KEY"></script>
     
   <script type="importmap">
 {
@@ -74,6 +75,5 @@
 </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

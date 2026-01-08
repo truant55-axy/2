@@ -1,14 +1,17 @@
 
 export interface ChartData {
   name: string;
-  value: number; // For Pie/Bar charts
+  value: number; // For Pie/Bar charts (quantity or percentage)
   color?: string;
+  // Enhanced fields for Product List
   progress?: number; // 0-100
-  statusLabel?: string; 
-  isLagging?: boolean; 
-  count?: number; 
-  avgTime?: string; 
-  projectList?: string[]; 
+  statusLabel?: string; // e.g. "生产中"
+  isLagging?: boolean; // Highlight for delayed items
+  // Enhanced fields for Status Pie
+  count?: number;
+  avgTime?: string; // e.g. "3.5h"
+  projectList?: string[]; // List of projects in this status
+  // Enhanced fields for Workload
   roleBreakdown?: { role: string; time: number; unit: string }[];
   [key: string]: any;
 }
@@ -30,10 +33,10 @@ export interface Hospital {
 
 export interface MapLocation {
   id: number;
-  // Visual position for map (0-100%)
+  // Visual position for Mock/Artistic map (0-100%)
   x: number;
   y: number;
-  // Real coordinates for AMap/Google Map
+  // Real coordinates for GPS/AMap/Google Map
   lng?: number; 
   lat?: number;
   label: string;
@@ -43,8 +46,8 @@ export interface MapLocation {
 
 export interface DashboardMetrics {
   totalOrders: number;
-  avgWorkload: number; 
-  workloadRate: number; 
+  avgWorkload: number; // Kept for backward compatibility or total rate
+  workloadRate: number; // 0-100 for ring chart
   workloadBreakdown: { role: string; time: number; unit: string }[];
   productDistribution: ChartData[];
   statusDistribution: ChartData[];
@@ -53,6 +56,7 @@ export interface DashboardMetrics {
   patients: Patient[];
 }
 
+// New interfaces for Workload interactivity
 export interface WorkloadData {
   rate: number;
   breakdown: { role: string; time: number; unit: string }[];
