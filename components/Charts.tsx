@@ -178,7 +178,7 @@ export const StatusPieChart: React.FC<StatusPieChartProps> = ({ data }) => {
 
 /**
  * ======================================================================
- * 3. Workload Dashboard (Interactive)
+ * 3. Workload Dashboard 
  * ======================================================================
  */
 
