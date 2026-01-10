@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>上交启源医疗器械智能制造云平台</title>
+    <title>上海交通大学医疗器械智能制造云平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script>
@@ -14,17 +14,21 @@
               sans: ['Inter', 'Noto Sans SC', 'sans-serif'],
             },
             colors: {
-              'medical-primary': '#0ea5e9', 
-              'medical-dark': '#0f172a',    
-              'medical-light': '#f8fafc', 
-              'medical-accent': '#3b82f6', 
+              'tech-bg': '#0b1121',       // Very dark blue/black
+              'tech-card': '#151e32',     // Slightly lighter card bg
+              'tech-border': '#1e293b',   // Border color
+              'tech-cyan': '#06b6d4',     // Primary accent (Cyan)
+              'tech-blue': '#3b82f6',     // Secondary accent (Blue)
+              'tech-text-main': '#f1f5f9', // Main text (Slate 100)
+              'tech-text-sub': '#94a3b8',  // Sub text (Slate 400)
             },
             boxShadow: {
-              'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-              'glow': '0 0 15px rgba(14, 165, 233, 0.3)',
+              'glow': '0 0 10px rgba(6, 182, 212, 0.15)',
+              'glow-strong': '0 0 15px rgba(6, 182, 212, 0.3)',
             },
             animation: {
               'spin-slow': 'spin 10s linear infinite',
+              'pulse-fast': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             }
           },
         },
@@ -32,22 +36,23 @@
     </script>
     <style>
       body {
-        background-color: #f1f5f9; /* Slate 100 */
-        color: #334155; 
+        background-color: #0b1121; /* Dark Tech Background */
+        color: #f1f5f9; 
       }
+      /* Custom Dark Scrollbar */
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: transparent; 
+        background: #0f172a; 
       }
       ::-webkit-scrollbar-thumb {
-        background: #cbd5e1; 
+        background: #334155; 
         border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8; 
+        background: #475569; 
       }
     </style>
     
@@ -75,6 +80,5 @@
 </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

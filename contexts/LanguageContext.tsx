@@ -10,7 +10,7 @@ interface LanguageContextProps {
 
 const translations: Record<Language, Record<string, string>> = {
   zh: {
-    'app.title': '上交启源',
+    'app.title': '上海交通大学',
     'app.subtitle': '医疗器械智能制造云平台',
     'loading': '系统加载中...',
     'search.title': '数据查询',
@@ -50,7 +50,7 @@ const translations: Record<Language, Record<string, string>> = {
     'lang.switch': 'English'
   },
   en: {
-    'app.title': 'SJTU Qiyuan',
+    'app.title': 'Shanghai Jiao Tong University',
     'app.subtitle': 'Medical Device Smart Cloud',
     'loading': 'System Loading...',
     'search.title': 'Data Query',
