@@ -13,12 +13,6 @@ export const useDashboard = (language: Language) => {
 
     const loadData = async () => {
       try {
-        // Only show loading screen on first load to prevent flashing every 2 minutes
-        // We can infer it's the first load if data is null, but since we are inside a closure 
-        // where data might be stale, we simply rely on the initial state logic or 
-        // accept the design. However, to keep it smooth, let's keep the logic simple.
-        // If we wanted to avoid flash on refetch, we would check if (data === null) setLoading(true).
-        // But for this specific request, I will just update the interval.
         setLoading(true);
         const result = await fetchDashboardData(language);
         if (isMounted) {
