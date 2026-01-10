@@ -46,7 +46,7 @@
 │   ├── InfoWidgets.tsx  # 信息小组件 (数字卡片, 列表, 详情弹窗)
 │   ├── LayoutComponents.tsx # 布局组件 (头部导航, 卡片容器, Loading)
 │   ├── MapWidget.tsx    # 地图组件 (包含高德地图逻辑与 SVG 模拟层)
-│   └── NotificationSystem.tsx # (已移除/废弃)
+│   └── NotificationSystem.tsx
 ├── contexts/
 │   └── LanguageContext.tsx # 国际化 (i18n) 上下文逻辑
 ├── hooks/
@@ -59,63 +59,3 @@
 ├── types.ts             # TypeScript 类型定义
 └── metadata.json        # 应用元数据
 ```
-
-## 🚀 快速开始
-
-### 环境要求
-*   Node.js (v18 或更高版本)
-*   npm 或 yarn
-
-### 安装步骤
-
-1.  **克隆仓库**:
-    ```bash
-    git clone https://github.com/your-username/medical-dashboard.git
-    cd medical-dashboard
-    ```
-
-2.  **安装依赖**:
-    ```bash
-    npm install
-    # 或者
-    yarn install
-    ```
-
-3.  **启动开发服务器**:
-    ```bash
-    npm run dev
-    ```
-
-## ⚙️ 项目配置
-
-### 地图 API 配置 (可选)
-如果需要启用真实的高德地图，请打开 `index.html` 并替换以下占位符：
-
-```html
-<!-- index.html -->
-<script type="text/javascript">
-  window._AMapSecurityConfig = {
-    securityJsCode: '在此填入您的安全密钥', // 替换此处
-  }
-</script>
-<script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=在此填入您的Key"></script> <!-- 替换 Key -->
-```
-
-*注意：如果未提供 Key，系统将自动显示 SVG 风格的模拟地图。*
-
-### API 接口
-应用默认配置为从 `/api/...` 获取数据。
-*   如果已有后端服务，请确保接口路径匹配。
-*   如果没有后端，`services/api.ts` 会捕获请求失败，并在模拟 400ms 延迟后自动返回 **演示数据**。
-
-## 🤝 参与贡献
-
-1.  Fork 本项目
-2.  创建您的特性分支 (`git checkout -b feature/AmazingFeature`)
-3.  提交您的修改 (`git commit -m 'Add some AmazingFeature'`)
-4.  推送到分支 (`git push origin feature/AmazingFeature`)
-5.  提交 Pull Request
-
-## 📄 开源协议
-
-本项目基于 MIT 协议开源。
