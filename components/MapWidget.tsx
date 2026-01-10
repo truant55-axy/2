@@ -9,10 +9,7 @@ interface MapWidgetProps {
   locations: MapLocation[];
 }
 
-/**
- * 模拟/艺术风格地图层
- * Dark Tech Theme Edition
- */
+
 const MockMapOverlay: React.FC<{ locations: MapLocation[] }> = ({ locations }) => {
   const { t } = useLanguage();
   return (
