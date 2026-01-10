@@ -4,12 +4,12 @@ export interface ChartData {
   value: number; // For Pie/Bar charts (quantity or percentage)
   color?: string;
   // Enhanced fields for Product List
-  progress?: number; // 0-100
-  statusLabel?: string; // e.g. "生产中"
+  progress?: number; 
+  statusLabel?: string;
   isLagging?: boolean; // Highlight for delayed items
   // Enhanced fields for Status Pie
   count?: number;
-  avgTime?: string; // e.g. "3.5h"
+  avgTime?: string; 
   projectList?: string[]; // List of projects in this status
   // Enhanced fields for Workload
   roleBreakdown?: { role: string; time: number; unit: string }[];
@@ -36,7 +36,7 @@ export interface MapLocation {
   // Visual position for Mock/Artistic map (0-100%)
   x: number;
   y: number;
-  // Real coordinates for GPS/AMap/Google Map
+  // Real coordinates for AMap
   lng?: number; 
   lat?: number;
   label: string;
