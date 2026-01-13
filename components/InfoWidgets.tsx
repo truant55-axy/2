@@ -118,7 +118,10 @@ export const PatientListWidget: React.FC<PatientListWidgetProps> = ({ patients }
       case 'Completed': return 'text-emerald-400 border-emerald-900/50 bg-emerald-900/10';
       case 'Sampling': return 'text-amber-400 border-amber-900/50 bg-amber-900/10';
       case 'Processing': return 'text-blue-400 border-blue-900/50 bg-blue-900/10';
-      default: return 'text-slate-500';
+      case 'Production': return 'text-indigo-400 border-indigo-900/50 bg-indigo-900/10';
+      case 'Design': return 'text-sky-400 border-sky-900/50 bg-sky-900/10';
+      case 'Mailing': return 'text-purple-400 border-purple-900/50 bg-purple-900/10';
+      default: return 'text-slate-500 border-slate-800 bg-slate-900/50';
     }
   };
 
@@ -127,6 +130,9 @@ export const PatientListWidget: React.FC<PatientListWidgetProps> = ({ patients }
         case 'Completed': return t('status.completed');
         case 'Sampling': return t('status.sampling');
         case 'Processing': return t('status.processing');
+        case 'Production': return t('status.production');
+        case 'Design': return t('status.design');
+        case 'Mailing': return t('status.mailing');
         default: return status;
     }
   }

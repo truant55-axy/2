@@ -3,7 +3,7 @@ import { DashboardMetrics } from '../types';
 import { fetchDashboardData } from '../services/api';
 import { Language } from '../contexts/LanguageContext';
 
-export const useDashboard = (language: Language) => {
+export const useDashboard = (language: Language, hospitalId: number | null) => {
   const [data, setData] = useState<DashboardMetrics | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +14,8 @@ export const useDashboard = (language: Language) => {
     const loadData = async () => {
       try {
         setLoading(true);
-        const result = await fetchDashboardData(language);
+        // Pass hospitalId to the fetch function
+        const result = await fetchDashboardData(language, hospitalId);
         if (isMounted) {
           setData(result);
           setError(null);
@@ -33,14 +34,14 @@ export const useDashboard = (language: Language) => {
 
     loadData();
 
-    // Poll every 2 minutes (120000 ms)
+    // Poll every 2 minutes
     const interval = setInterval(loadData, 120000);
 
     return () => {
       isMounted = false;
       clearInterval(interval);
     };
-  }, [language]);
+  }, [language, hospitalId]); // Refetch when hospitalId changes
 
   return { data, loading, error };
 };

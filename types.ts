@@ -1,15 +1,16 @@
 
+
 export interface ChartData {
   name: string;
   value: number; // For Pie/Bar charts (quantity or percentage)
   color?: string;
   // Enhanced fields for Product List
-  progress?: number; 
-  statusLabel?: string;
+  progress?: number; // 0-100
+  statusLabel?: string; // e.g. "生产中"
   isLagging?: boolean; // Highlight for delayed items
   // Enhanced fields for Status Pie
   count?: number;
-  avgTime?: string; 
+  avgTime?: string; // e.g. "3.5h"
   projectList?: string[]; // List of projects in this status
   // Enhanced fields for Workload
   roleBreakdown?: { role: string; time: number; unit: string }[];
@@ -20,7 +21,7 @@ export interface Patient {
   id: string;
   name: string;
   project: string;
-  status: 'Completed' | 'Sampling' | 'Processing';
+  status: 'Completed' | 'Sampling' | 'Processing' | 'Production' | 'Design';
   hospital: string;
 }
 
@@ -36,12 +37,19 @@ export interface MapLocation {
   // Visual position for Mock/Artistic map (0-100%)
   x: number;
   y: number;
-  // Real coordinates for AMap
+  // Real coordinates for GPS/AMap/Google Map
   lng?: number; 
   lat?: number;
   label: string;
   type: 'transport' | 'clinic';
   status: 'normal' | 'busy' | 'offline';
+}
+
+export interface SearchResults {
+  products: ChartData[];
+  hospitals: Hospital[];
+  patients: Patient[];
+  locations: MapLocation[];
 }
 
 export interface DashboardMetrics {

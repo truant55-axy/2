@@ -1,84 +1,162 @@
-import React from 'react';
-import { Header, DashboardCard, LoadingScreen, SearchSection } from './components/LayoutComponents';
-import { ProductBarChart, StatusPieChart, WorkloadGauge } from './components/Charts';
+import React, { useState, useEffect } from 'react';
+import { Header, DashboardCard, LoadingScreen, SearchSection, SearchResultsModal, HospitalNavBar } from './components/LayoutComponents';
+import { ProductBarChart, StatusPieChart, WorkloadGauge, WorkloadFilter } from './components/Charts';
 import { MapWidget } from './components/MapWidget';
-import { TotalOrdersWidget, HospitalListWidget, PatientListWidget } from './components/InfoWidgets';
-import { Activity, PieChart, Clock, Map, Database, Users, Building } from 'lucide-react';
+import { TotalOrdersWidget, PatientListWidget } from './components/InfoWidgets';
+import { Activity, PieChart, Clock, Map, Database, Users } from 'lucide-react';
 import { useDashboard } from './hooks/useDashboard';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
+import { searchGlobalData, fetchHospitalList, fetchWorkloadData } from './services/api';
+import { SearchResults, Hospital } from './types';
 
 const DashboardContent: React.FC = () => {
   const { language, t } = useLanguage();
-  const { data, loading, error } = useDashboard(language);
+  const [selectedHospitalId, setSelectedHospitalId] = useState<number | null>(null);
+  const { data, loading, error } = useDashboard(language, selectedHospitalId);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
 
-  if (loading) {
+  // Workload Widget State
+  const [wlFilter, setWlFilter] = useState<'week'|'month'|'cycle'>('week');
+  const [wlData, setWlData] = useState<{rate: number, breakdown: any[]} | null>(null);
+
+  // Search State
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResults | null>(null);
+
+  // Initial Fetch of Hospital List
+  useEffect(() => {
+    const loadHospitals = async () => {
+        const list = await fetchHospitalList(language);
+        setHospitals(list);
+    };
+    loadHospitals();
+  }, [language]);
+
+  // Sync workload data when main data loads
+  useEffect(() => {
+    if (data) {
+        setWlData({
+            rate: data.workloadRate,
+            breakdown: data.workloadBreakdown
+        });
+        setWlFilter('week');
+    }
+  }, [data]);
+
+  const handleWlFilterChange = async (f: 'week'|'month'|'cycle') => {
+    setWlFilter(f);
+    try {
+        const res = await fetchWorkloadData(f, language, selectedHospitalId);
+        setWlData(res);
+    } catch(e) { console.error(e); }
+  };
+
+  const handleSearch = async (query: string) => {
+    if (!query.trim()) return;
+    setSearchQuery(query);
+    setIsSearchOpen(true);
+    setIsSearching(true);
+    setSearchResults(null);
+    try {
+      const results = await searchGlobalData(query, language);
+      setSearchResults(results);
+    } catch (e) { console.error(e); } finally { setIsSearching(false); }
+  };
+
+  if (loading && !data) {
     return <LoadingScreen />;
   }
 
   if (error || !data) {
-    return (
-      <div className="min-h-screen bg-[#0b1121] flex items-center justify-center text-red-500 font-mono">
-        Error loading dashboard data: {error}
-      </div>
-    );
+    return <div className="min-h-screen bg-[#0b1121] flex items-center justify-center text-red-500">Error: {error}</div>;
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-tech-cyan selection:text-black flex flex-col overflow-hidden relative">
-      {/* Global Background Grid Effect */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-20" 
-           style={{
-               backgroundImage: 'linear-gradient(rgba(30, 41, 59, 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.5) 1px, transparent 1px)',
-               backgroundSize: '50px 50px'
-           }}>
+    // Mobile: min-h-screen (scrollable). Desktop: h-screen (fixed).
+    <div className="lg:h-screen lg:w-screen min-h-screen w-full bg-[#020617] text-slate-200 font-sans selection:bg-tech-cyan selection:text-black flex flex-col relative">
+      {/* Background Grid - Fixed so it covers scroll on mobile */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-20" 
+           style={{ backgroundImage: 'linear-gradient(rgba(30, 41, 59, 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.5) 1px, transparent 1px)', backgroundSize: '50px 50px' }}>
       </div>
       
-      <div className="z-10 flex flex-col h-full">
+      <div className="z-10 flex flex-col lg:h-full min-h-screen">
         <Header />
-        <SearchSection />
         
-        <main className="flex-1 p-3 lg:p-5 overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-full">
+        {/* Navigation & Search Row */}
+        {/* Removed fixed positioning on mobile to prevent overlap issues */}
+        <div className="shrink-0 flex flex-col md:flex-row border-b border-[#1e293b] bg-[#020617] lg:bg-transparent z-40">
+            <div className="flex-1 min-w-0">
+                <HospitalNavBar 
+                    hospitals={hospitals} 
+                    selectedId={selectedHospitalId} 
+                    onSelect={setSelectedHospitalId} 
+                />
+            </div>
+        </div>
+
+        {/* Main Content Area */}
+        <main className="flex-1 p-3 lg:p-3 lg:overflow-hidden flex flex-col min-h-0">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-3 lg:h-full pb-10 lg:pb-0">
             
             {/* Left Column (25%) */}
-            <div className="lg:col-span-3 flex flex-col gap-5 h-full overflow-y-auto custom-scrollbar pr-1">
-              {/* Basic Data - Enhanced List View */}
-              <DashboardCard title={t('card.basicData')} className="flex-1 min-h-[300px]" icon={<Database size={16} />}>
+            <div className="lg:col-span-3 flex flex-col gap-4 lg:gap-3 lg:h-full min-h-0">
+              {/* Basic Data */}
+              {/* Mobile: 320px fixed height. Desktop: 40% */}
+              <DashboardCard title={t('card.basicData')} className="h-[320px] lg:h-[40%] lg:min-h-0 shrink-0" icon={<Database size={16} />}>
                 <ProductBarChart data={data.productDistribution} />
               </DashboardCard>
 
-              {/* Platform Data Summary - Enhanced Pie */}
-              <DashboardCard title={t('card.platformData')} className="h-[280px]" icon={<PieChart size={16} />}>
+              {/* Platform Data Summary */}
+              {/* Mobile: 280px fixed height. Desktop: 35% */}
+              <DashboardCard title={t('card.platformData')} className="h-[280px] lg:h-[35%] lg:min-h-0 shrink-0" icon={<PieChart size={16} />}>
                 <StatusPieChart data={data.statusDistribution} />
               </DashboardCard>
 
-               {/* Workload Stats - Enhanced Dashboard */}
-              <DashboardCard title={t('card.workload')} className="h-[200px]" icon={<Clock size={16} />}>
-                <WorkloadGauge rate={data.workloadRate} breakdown={data.workloadBreakdown} />
+               {/* Workload Stats */}
+               {/* Mobile: 280px fixed height. Desktop: Flex fill */}
+              <DashboardCard 
+                title={t('card.workload')} 
+                className="h-[280px] lg:flex-1 lg:min-h-0 shrink-0" 
+                icon={<Clock size={16} />}
+                extra={<WorkloadFilter filter={wlFilter} onChange={handleWlFilterChange} />}
+              >
+                {wlData && (
+                    <WorkloadGauge 
+                        rate={wlData.rate} 
+                        breakdown={wlData.breakdown} 
+                        period={wlFilter}
+                    />
+                )}
               </DashboardCard>
             </div>
 
-            {/* Center Column (50%) - Map */}
-            <div className="lg:col-span-6 h-full flex flex-col min-h-[400px]">
-               <DashboardCard title={t('card.map')} className="h-full shadow-glow-strong border-tech-cyan/30" icon={<Map size={16} />}>
+            {/* Center Column (55%) - Map */}
+            <div className="lg:col-span-6 lg:h-full flex flex-col min-h-0 gap-4 lg:gap-0">
+               {/* Search Section */}
+               <div className="mb-0 lg:mb-2 shrink-0">
+                 <SearchSection onSearch={handleSearch} />
+               </div>
+               
+               {/* Map Card */}
+               {/* Mobile: 400px fixed height. Desktop: Flex fill */}
+               <DashboardCard title={selectedHospitalId ? hospitals.find(h=>h.id === selectedHospitalId)?.name || t('card.map') : t('card.map')} className="h-[400px] lg:flex-1 shadow-glow-strong border-tech-cyan/30 lg:min-h-0 shrink-0" icon={<Map size={16} />}>
                  <MapWidget locations={data.mapLocations} />
                </DashboardCard>
             </div>
 
-            {/* Right Column (25%) */}
-            <div className="lg:col-span-3 flex flex-col gap-5 h-full overflow-y-auto custom-scrollbar pl-1">
+            {/* Right Column (20%) */}
+            <div className="lg:col-span-3 flex flex-col gap-4 lg:gap-3 lg:h-full min-h-0">
               {/* Total Orders */}
-              <DashboardCard title={t('card.totalOrders')} className="h-[150px]" icon={<Activity size={16} />}>
+              {/* Mobile: 140px fixed height. Desktop: 20% */}
+              <DashboardCard title={t('card.totalOrders')} className="h-[140px] lg:h-[20%] lg:min-h-[120px] shrink-0" icon={<Activity size={16} />}>
                 <TotalOrdersWidget count={data.totalOrders} />
               </DashboardCard>
 
-              {/* Basic Info (Hospitals) */}
-              <DashboardCard title={t('card.basicInfo')} className="flex-1 min-h-[200px]" icon={<Building size={16} />}>
-                <HospitalListWidget hospitals={data.hospitals} />
-              </DashboardCard>
-
               {/* Patient List */}
-              <DashboardCard title={t('card.patientList')} className="flex-1 min-h-[300px]" icon={<Users size={16} />}>
+              {/* Mobile: 600px fixed height (plenty of scrolling room). Desktop: Flex fill */}
+              <DashboardCard title={t('card.patientList')} className="h-[600px] lg:flex-1 lg:min-h-0 shrink-0" icon={<Users size={16} />}>
                 <PatientListWidget patients={data.patients} />
               </DashboardCard>
             </div>
@@ -86,6 +164,15 @@ const DashboardContent: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {isSearchOpen && (
+        <SearchResultsModal 
+          onClose={() => setIsSearchOpen(false)} 
+          results={searchResults}
+          isLoading={isSearching}
+          query={searchQuery}
+        />
+      )}
     </div>
   );
 }
